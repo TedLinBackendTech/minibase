@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"btree"},{"l":"bufmgr"},{"l":"chainexception"},{"l":"diskmgr"},{"l":"global"},{"l":"heap"},{"l":"index"},{"l":"iterator"}];updateSearchResults();
