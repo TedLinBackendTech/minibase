@@ -28,8 +28,16 @@ public class query {
     
         try {
             // 開DB
-            SystemDefs sysdef = new SystemDefs("dbinstance/mydb", 1000, numBuf, "Clock");
-    
+            SystemDefs sysdef ;
+            File dbfile = new File("../dbinstance/mydb");
+            // File dbfile = new File("../dbinstance/mydb");
+            if (!dbfile.exists()) {
+                System.out.println("mydb not found. Creating a new database...");
+                sysdef = new SystemDefs("../dbinstance/mydb", 1000, 4000, "Clock");
+            } else {
+                System.out.println("mydb found. Opening existing database...");
+                sysdef = new SystemDefs("../dbinstance/mydb", 1000, 4000, "Clock");
+            }
             QuerySpec qs = parseQuerySpec(qsName);
     
             AttrType[] attrTypes = get_attrTypes(relName1, null);
@@ -71,6 +79,19 @@ public class query {
                     expr[0].type2 = new AttrType(AttrType.attrInteger);
                     expr[0].operand1.symbol = new FldSpec(new RelSpec(RelSpec.outer), qs.getQueryField());
                     expr[0].operand2.integer = Integer.parseInt(qs.getFilterValue());
+
+
+                    // // 先讀檔，把 target1.txt 的內容抓出來
+                    // BufferedReader reader = new BufferedReader(
+                    //     new FileReader("queries/" + qs.getFilterValue() + ".txt")
+                    // );
+                    // String valueLine = reader.readLine().trim();
+                    // reader.close();
+
+                    // // 再把真正的數值 parse 出來
+                    // expr[0].operand2.integer = Integer.parseInt(valueLine);
+
+
     
                     FileScan scan = new FileScan(relName1, attrTypes, Ssizes, (short) attrTypes.length,
                             1, projlist, expr);
@@ -169,7 +190,9 @@ private static AttrType[] get_attrTypes(String relName, AttrType[] attrTypes) th
 private static Vector100Dtype readTargetVector(String fileName) throws IOException {
     if (!fileName.endsWith(".txt"))
         fileName += ".txt";
-    BufferedReader br = new BufferedReader(new FileReader("queries/" + fileName));
+    // BufferedReader br = new BufferedReader(new FileReader("queries/" + fileName));
+    BufferedReader br = new BufferedReader(new FileReader("../src/phase3_demo_data/" + fileName));
+
     String line = br.readLine().trim();
     br.close();
     String[] tokens = line.split("\\s+");
@@ -191,7 +214,7 @@ private static Vector100Dtype readTargetVector(String fileName) throws IOExcepti
     QuerySpec qs = new QuerySpec();
 
     if (line.startsWith("Range(")) {
-      // (這段是你如果有支援Range再留，沒做Range可以略)
+
       throw new IllegalArgumentException("Range queries not supported in this project.");
     }
     else if (line.startsWith("NN(")) {
@@ -223,15 +246,19 @@ private static Vector100Dtype readTargetVector(String fileName) throws IOExcepti
       String inside = line.substring("Filter(".length(), line.length() - 1);
       String[] tokens = inside.split(",");
 
-      for (int i = 0; i < tokens.length; i++) {
+        for (int i = 0; i < tokens.length; i++) {
         tokens[i] = tokens[i].trim();
-      }
+        }
 
-      qs.setQueryField(Integer.parseInt(tokens[0])); // QA
-      qs.setTargetFileName(tokens[1]);               // T
-      qs.setThreshold(Integer.parseInt(tokens[2]));   // K
-
-      qs.setIndexOption(tokens[3]);                  // I <-- 加這行（Filter也支援I）
+        // 1. QA
+        qs.setQueryField(Integer.parseInt(tokens[0]));
+        // 2. T
+        qs.setFilterValue(tokens[1]);
+        // 3. K
+        qs.setThreshold(Integer.parseInt(tokens[2]));
+        // 4. I
+        qs.setIndexOption(tokens[3]);
+        
 
       int numOut = tokens.length - 4;
       int[] outFields = new int[numOut];

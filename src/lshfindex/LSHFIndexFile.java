@@ -102,7 +102,7 @@ public class LSHFIndexFile {
                 System.out.println("[Read Header Test] headerPageId: " + headerPageId.pid);
             }
 
-            SystemDefs.JavabaseDB.add_file_entry(fileName, headerPageId);
+            // SystemDefs.JavabaseDB.add_file_entry(fileName, headerPageId);
             System.out.println("creating headerPageId = " + headerPageId.pid);
             
             // Store L and h in the header page (using the known offsets in LSHFHeaderPage)
