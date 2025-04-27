@@ -8,4 +8,5 @@ public enum QueryType {
   FILTER,
   RANGE,
   NN,
+  DJOIN 
 }

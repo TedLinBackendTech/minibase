@@ -16,7 +16,11 @@ public class QuerySpec {
   private String filterValue;
   private int topK;
   private String indexOption;
-
+  private QuerySpec nestedQuery;   // 子查询（Filter/NN）封装 QA1, T1, K1, I1, …
+  private int       djoinField2;   // QA2
+  private int       djoinDistance; // D2
+  private String    djoinIndexOption; // I2
+  public QuerySpec() {}
   public QueryType getQueryType() {
     return queryType;
   }
@@ -94,5 +98,17 @@ public class QuerySpec {
   public String getIndexOption() {
       return indexOption;
   }
+
+  public QuerySpec getNestedQuery()     { return nestedQuery; }
+  public int       getDjoinField2()     { return djoinField2; }
+  public int       getDjoinDistance()   { return djoinDistance; }
+  public String    getDjoinIndexOption(){ return djoinIndexOption; }
+  public void setNestedQuery(QuerySpec sub)     { this.nestedQuery = sub; }
+  public void setDjoinField2(int f2)            { this.djoinField2 = f2; }
+  public void setDjoinDistance(int d2)          { this.djoinDistance = d2; }
+  public void setDjoinIndexOption(String opt2)  { this.djoinIndexOption = opt2; }
+
+
+
 }
 
